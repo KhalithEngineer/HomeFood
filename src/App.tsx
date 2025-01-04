@@ -3,6 +3,7 @@ import { useRoutes, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/home";
 import Login from "./components/Login";
 import SubscriptionManage from "./components/SubscriptionManage";
+import ChefProfile from "./components/ChefProfile";
 import routes from "tempo-routes";
 import { supabase } from "./lib/supabase";
 import { createSubscription } from "./lib/auth";
@@ -30,7 +31,11 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleSubscribe = async (plan: "day" | "week" | "month") => {
+  const handleSubscribe = async (
+    plan: "day" | "week" | "month",
+    cuisineType: string,
+    deliveryAddressId: string,
+  ) => {
     try {
       if (!user) {
         toast({
@@ -41,7 +46,7 @@ function App() {
         return;
       }
 
-      await createSubscription(user.id, plan);
+      await createSubscription(user.id, plan, cuisineType, deliveryAddressId);
       toast({
         title: "Subscription successful!",
         description: `You have successfully subscribed to the ${plan} plan.`,
@@ -79,6 +84,10 @@ function App() {
             element={
               user ? <SubscriptionManage /> : <Navigate to="/login" replace />
             }
+          />
+          <Route
+            path="/chef/:id"
+            element={user ? <ChefProfile /> : <Navigate to="/login" replace />}
           />
           <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>

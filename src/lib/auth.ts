@@ -4,7 +4,7 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}/auth/callback`,
+      redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}auth/callback`,
     },
   });
 
@@ -24,9 +24,45 @@ export async function getCurrentUser() {
   return user;
 }
 
+export async function createDeliveryAddress(address: {
+  addressLine1: string;
+  addressLine2: string;
+  area: string;
+  pincode: string;
+  landmark: string;
+}) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("User not authenticated");
+
+  const { data, error } = await supabase
+    .from("delivery_addresses")
+    .insert([
+      {
+        user_id: user.id,
+        address_line1: address.addressLine1,
+        address_line2: address.addressLine2,
+        area: address.area,
+        pincode: address.pincode,
+        landmark: address.landmark,
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating address:", error);
+    throw error;
+  }
+  return data;
+}
+
 export async function createSubscription(
   userId: string,
   period: "day" | "week" | "month",
+  cuisineType: string = "All Cuisines",
+  deliveryAddressId: string,
 ) {
   const {
     data: { user },
@@ -50,12 +86,17 @@ export async function createSubscription(
       user_email: user?.email,
       period,
       price: prices[period],
+      cuisine_type: cuisineType,
+      delivery_address_id: deliveryAddressId,
       active_until: new Date(
         Date.now() + durationInDays[period] * 24 * 60 * 60 * 1000,
       ).toISOString(),
     },
   ]);
 
-  if (error) throw error;
+  if (error) {
+    console.error("Error creating subscription:", error);
+    throw error;
+  }
   return data;
 }

@@ -9,7 +9,11 @@ interface HomePageProps {
   onSearch?: (term: string) => void;
   onCuisineFilter?: (cuisine: string) => void;
   onDietaryFilter?: (preferences: string[]) => void;
-  onSubscribe?: (plan: "day" | "week" | "month") => void;
+  onSubscribe?: (
+    plan: "day" | "week" | "month",
+    cuisineType: string,
+    deliveryAddressId: string,
+  ) => void;
   meals?: Array<{
     id: string;
     imageUrl: string;
@@ -25,7 +29,8 @@ const HomePage = ({
   onSearch = () => console.log("Search triggered"),
   onCuisineFilter = () => console.log("Cuisine filter changed"),
   onDietaryFilter = () => console.log("Dietary preferences changed"),
-  onSubscribe = () => console.log("Subscribe clicked"),
+  onSubscribe = (plan, cuisineType, deliveryAddressId) =>
+    console.log("Subscribe clicked", plan, cuisineType, deliveryAddressId),
   meals = [
     {
       id: "1",

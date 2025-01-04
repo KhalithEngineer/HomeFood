@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -18,23 +19,25 @@ interface MealCardProps {
   imageUrl?: string;
   title?: string;
   chefName?: string;
+  chefId?: string;
   cuisineType?: string;
   price?: number;
   rating?: number;
   onSubscribeClick?: () => void;
-  onChefClick?: () => void;
 }
 
 const MealCard = ({
   imageUrl = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
   title = "Homemade Pasta Carbonara",
   chefName = "Maria Garcia",
+  chefId = "1",
   cuisineType = "Italian",
   price = 299,
   rating = 4.5,
   onSubscribeClick = () => console.log("Subscribe clicked"),
-  onChefClick = () => console.log("Chef profile clicked"),
 }: MealCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <Card className="w-full max-w-[360px] h-auto md:h-[420px] overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="p-0">
@@ -89,7 +92,7 @@ const MealCard = ({
               <Button
                 variant="outline"
                 className="w-full sm:flex-1"
-                onClick={onChefClick}
+                onClick={() => navigate(`/chef/${chefId}`)}
               >
                 <ChefHat className="w-4 h-4 mr-2" />
                 View Chef

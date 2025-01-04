@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Clock, Calendar } from "lucide-react";
+import { CalendarDays, Clock, Calendar, MapPin } from "lucide-react";
 import NavMenu from "./NavMenu";
+
+interface DeliveryAddress {
+  id: string;
+  address_line1: string;
+  address_line2: string;
+  area: string;
+  pincode: string;
+  landmark: string;
+}
 
 interface Subscription {
   id: string;
@@ -11,6 +20,8 @@ interface Subscription {
   period: string;
   price: number;
   active_until: string;
+  cuisine_type: string;
+  delivery_address: DeliveryAddress;
 }
 
 const SubscriptionManage = () => {
@@ -25,7 +36,12 @@ const SubscriptionManage = () => {
     try {
       const { data, error } = await supabase
         .from("subscriptions")
-        .select("*")
+        .select(
+          `
+          *,
+          delivery_address:delivery_addresses(*)
+        `,
+        )
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -40,7 +56,7 @@ const SubscriptionManage = () => {
   const getPlanIcon = (period: string) => {
     switch (period) {
       case "day":
-        return <Clock className="w-5 h-5" />;
+        return <Clock className="w-5 h-5 text-gray-600" />;
       case "week":
         return <CalendarDays className="w-5 h-5" />;
       case "month":
@@ -56,6 +72,17 @@ const SubscriptionManage = () => {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const formatAddress = (address: DeliveryAddress) => {
+    const parts = [
+      address.address_line1,
+      address.address_line2,
+      address.area,
+      `Chennai - ${address.pincode}`,
+    ].filter(Boolean);
+
+    return parts.join(", ");
   };
 
   if (loading) {
@@ -114,6 +141,23 @@ const SubscriptionManage = () => {
                       <div>
                         <p className="text-sm text-gray-500">Price</p>
                         <p className="font-medium">₹{sub.price}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Cuisine Type</p>
+                        <p className="font-medium">{sub.cuisine_type}</p>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                          <MapPin className="w-4 h-4" /> Delivery Address
+                        </p>
+                        <p className="font-medium">
+                          {formatAddress(sub.delivery_address)}
+                        </p>
+                        {sub.delivery_address.landmark && (
+                          <p className="text-sm text-gray-500 mt-1">
+                            Landmark: {sub.delivery_address.landmark}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <p className="text-sm text-gray-500">Status</p>
