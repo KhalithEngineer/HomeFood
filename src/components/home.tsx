@@ -33,7 +33,7 @@ const HomePage = ({
     console.log("Subscribe clicked", plan, cuisineType, deliveryAddressId),
   meals = [
     {
-      id: "1",
+      id: "41d37a76-5a8f-4ea3-9289-0a8294ead643",
       imageUrl: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc",
       title: "South Indian Thali",
       chefName: "Lakshmi Iyer",
@@ -42,7 +42,7 @@ const HomePage = ({
       rating: 4.8,
     },
     {
-      id: "2",
+      id: "51072b55-8b60-433a-a9a2-f0d4836242e9",
       imageUrl: "https://images.unsplash.com/photo-1628294895950-9805252327bc",
       title: "Rajasthani Royal Thali",
       chefName: "Priya Sharma",
@@ -51,7 +51,7 @@ const HomePage = ({
       rating: 4.9,
     },
     {
-      id: "3",
+      id: "9e5814c6-2129-4cdb-beb4-6097d7d0e48a",
       imageUrl: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7",
       title: "Bengali Fish Curry Meal",
       chefName: "Riya Sen",
@@ -60,7 +60,7 @@ const HomePage = ({
       rating: 4.7,
     },
     {
-      id: "4",
+      id: "6c6ae651-32b9-46fe-9b5a-3ba1a25dc8ac",
       imageUrl: "https://images.unsplash.com/photo-1645177628172-a94c1f96e6db",
       title: "Gujarati Thali Special",
       chefName: "Meera Patel",
@@ -69,7 +69,7 @@ const HomePage = ({
       rating: 4.6,
     },
     {
-      id: "5",
+      id: "848ed427-d081-4c2f-9ead-924c3b90ba90",
       imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950",
       title: "Kerala Sadhya",
       chefName: "Anjali Menon",
@@ -78,7 +78,7 @@ const HomePage = ({
       rating: 4.8,
     },
     {
-      id: "6",
+      id: "4d37d555-e77e-49d2-859e-94371c44cc16",
       imageUrl: "https://images.unsplash.com/photo-1585937421612-70a008356fbe",
       title: "Punjabi Thali",
       chefName: "Harpreet Kaur",
@@ -99,7 +99,7 @@ const HomePage = ({
         onDietaryFilter={onDietaryFilter}
       />
       <MealGrid
-        meals={meals}
+        meals={meals.map(meal => ({...meal, chefId: meal.id}))}
         onSubscribeClick={() => setSubscriptionDialogOpen(true)}
       />
       <SubscriptionFAB onClick={() => setSubscriptionDialogOpen(true)} />
