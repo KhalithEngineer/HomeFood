@@ -12,7 +12,16 @@ interface MealGridProps {
     price: number;
     rating: number;
   }>;
-  onSubscribeClick?: () => void;
+  onSubscribeClick?: (meal: {
+    id: string;
+    imageUrl: string;
+    title: string;
+    chefName: string;
+    chefId: string;
+    cuisineType: string;
+    price: number;
+    rating: number;
+  }) => void;
 }
 
 const MealGrid = ({
@@ -28,7 +37,7 @@ const MealGrid = ({
       rating: 4.5,
     },
   ],
-  onSubscribeClick,
+  onSubscribeClick = () => console.log("Subscribe clicked"),
 }: MealGridProps) => {
   return (
     <div className="w-full min-h-[702px] bg-gray-50 p-6">
@@ -43,7 +52,7 @@ const MealGrid = ({
             cuisineType={meal.cuisineType}
             price={meal.price}
             rating={meal.rating}
-            onSubscribeClick={onSubscribeClick}
+            onSubscribeClick={() => onSubscribeClick(meal)}
           />
         ))}
       </div>
