@@ -34,6 +34,13 @@ const SubscriptionManage = () => {
 
   const fetchSubscriptions = async () => {
     try {
+      // First get the current user
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      // Then fetch their subscriptions
       const { data, error } = await supabase
         .from("subscriptions")
         .select(
@@ -42,6 +49,7 @@ const SubscriptionManage = () => {
           delivery_address:delivery_addresses(*)
         `,
         )
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
