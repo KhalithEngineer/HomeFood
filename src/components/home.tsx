@@ -56,7 +56,8 @@ const HomePage = ({
       const transformedMeals = chefs.map((chef) => ({
         id: chef.id,
         imageUrl:
-          "https://images.unsplash.com/photo-1589301760014-d929f3979dbc", // You can add this to chef table if needed
+          chef.featured_image_url ||
+          "https://images.unsplash.com/photo-1546069901-ba9599a7e63c", // Fallback image if none is set
         title: `${chef.cuisine_specialties[0]} Special Thali`,
         chefName: chef.name,
         chefId: chef.id,
