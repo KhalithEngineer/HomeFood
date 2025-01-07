@@ -2,6 +2,7 @@ import { supabase } from "./supabase";
 
 export async function signInWithGoogle() {
   console.log(`${window.location.origin}/auth/callback`);
+  console.log(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY)
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
