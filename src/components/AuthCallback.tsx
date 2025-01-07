@@ -11,7 +11,7 @@ const AuthCallback = () => {
       try {
         // Extract hash from URL if present
         const hashParams = new URLSearchParams(
-          location.hash ? location.hash.substring(1) : location.search
+          location.hash ? location.hash.substring(1) : location.search,
         );
 
         // If we have an access token in the URL, set it
@@ -32,10 +32,13 @@ const AuthCallback = () => {
         }
 
         // If no access token in URL, try to get the session
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
         if (error) throw error;
-        
+
         if (session) {
           navigate("/", { replace: true });
         } else {
