@@ -42,7 +42,7 @@ export async function createDeliveryAddress(address: {
       {
         user_id: user.id,
         address_line1: address.addressLine1,
-        address_line2: address.address_line2,
+        address_line2: address.addressLine2,
         area: address.area,
         pincode: address.pincode,
         landmark: address.landmark,
