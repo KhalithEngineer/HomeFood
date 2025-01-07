@@ -1,13 +1,12 @@
 import { Suspense, useEffect, useState } from "react";
-import { useRoutes, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/home";
 import Login from "./components/Login";
 import SubscriptionManage from "./components/SubscriptionManage";
 import ChefProfile from "./components/ChefProfile";
-import routes from "tempo-routes";
+import AuthCallback from "./components/AuthCallback";
 import { supabase } from "./lib/supabase";
 import { createSubscription } from "./lib/auth";
-import AuthCallback from "./components/AuthCallback";
 import { useToast } from "./components/ui/use-toast";
 import { Toaster } from "./components/ui/toaster";
 
@@ -91,7 +90,6 @@ function App() {
           />
           <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>
-        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
         <Toaster />
       </>
     </Suspense>

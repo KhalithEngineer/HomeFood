@@ -4,7 +4,7 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}auth/callback`,
+      redirectTo: `${window.location.origin}/auth/callback`,
     },
   });
 
@@ -42,7 +42,7 @@ export async function createDeliveryAddress(address: {
       {
         user_id: user.id,
         address_line1: address.addressLine1,
-        address_line2: address.addressLine2,
+        address_line2: address.address_line2,
         area: address.area,
         pincode: address.pincode,
         landmark: address.landmark,
