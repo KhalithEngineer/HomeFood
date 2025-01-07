@@ -7,7 +7,7 @@ export async function signInWithGoogle() {
       redirectTo: `${window.location.origin}/auth/callback`,
       queryParams: {
         access_type: 'offline',
-        prompt: 'consent'
+        prompt: 'consent',
       }
     },
   });
@@ -19,6 +19,7 @@ export async function signInWithGoogle() {
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
+  window.location.href = "/login";
 }
 
 export async function getCurrentUser() {
