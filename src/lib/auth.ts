@@ -1,8 +1,6 @@
 import { supabase } from "./supabase";
 
 export async function signInWithGoogle() {
-  console.log(`${window.location.origin}/auth/callback`);
-  console.log(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY)
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
@@ -44,7 +42,7 @@ export async function createDeliveryAddress(address: {
       {
         user_id: user.id,
         address_line1: address.addressLine1,
-        address_line2: address.addressLine2,
+        address_line2: address.address_line2,
         area: address.area,
         pincode: address.pincode,
         landmark: address.landmark,

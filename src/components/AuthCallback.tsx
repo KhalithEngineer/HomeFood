@@ -1,38 +1,43 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 const AuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Exchange the OAuth code for a session
-    const handleAuthRedirect = async () => {
+    // Handle the OAuth callback
+    const handleAuthCallback = async () => {
       try {
-        const { data, error } = await supabase.auth.getSession();
+        // Get the session - this will automatically handle the token in the URL
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
 
-        if (error) {
-          console.error("Error fetching session:", error.message);
-          // Handle error (e.g., show an error message or redirect)
-          navigate("/error", { replace: true });
-          return;
-        }
+        if (error) throw error;
 
-        // If session exists, redirect to home
-        if (data.session) {
-          console.log("Session retrieved:", data.session);
+        if (session) {
+          // Successfully authenticated
           navigate("/", { replace: true });
+        } else {
+          // No session, redirect to login
+          navigate("/login", { replace: true });
         }
-      } catch (err) {
-        console.error("Unexpected error:", err);
-        navigate("/error", { replace: true });
+      } catch (error) {
+        console.error("Error in auth callback:", error);
+        navigate("/login", { replace: true });
       }
     };
 
-    handleAuthRedirect();
+    handleAuthCallback();
   }, [navigate]);
 
-  return <div>Loading...</div>;
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-600">Completing authentication...</p>
+    </div>
+  );
 };
 
 export default AuthCallback;
