@@ -1,27 +1,44 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 
 const AuthCallback = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Handle the OAuth callback
     const handleAuthCallback = async () => {
       try {
-        // Get the session - this will automatically handle the token in the URL
-        const {
-          data: { session },
-          error,
-        } = await supabase.auth.getSession();
+        // Extract hash from URL if present
+        const hashParams = new URLSearchParams(
+          location.hash ? location.hash.substring(1) : location.search
+        );
 
+        // If we have an access token in the URL, set it
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+
+        if (accessToken) {
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken || "",
+          });
+
+          if (error) throw error;
+          if (data.session) {
+            navigate("/", { replace: true });
+            return;
+          }
+        }
+
+        // If no access token in URL, try to get the session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
         if (error) throw error;
-
+        
         if (session) {
-          // Successfully authenticated
           navigate("/", { replace: true });
         } else {
-          // No session, redirect to login
           navigate("/login", { replace: true });
         }
       } catch (error) {
@@ -31,11 +48,14 @@ const AuthCallback = () => {
     };
 
     handleAuthCallback();
-  }, [navigate]);
+  }, [navigate, location]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-gray-600">Completing authentication...</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="p-4 text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+        <p className="text-gray-600">Completing authentication...</p>
+      </div>
     </div>
   );
 };
